@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.leipeng/mapper.UserMapper">   <!-- 命名空间，名字可以随意起，只要不冲突即可 -->
+
+    <!-- 对象映射，可以不写 -->
+    <!--主键 id 和 普通属性 result-->
+    <resultMap type="com.leipeng.pojo.Person" id="personRM">
+        <!-- property="id"，表示实体对象的属性；column="ID"，表示 SQL 查询的结果集的列 -->
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="photoPath" column="photoPath"/>
+    </resultMap>
+
+    <!-- 对象映射，可以不写 -->
+    <!-- 查询功能，resultType 设置返回值类型 -->
+    <!--在映射文件中，常用的标签有四个，分别为： select、insert、update 和 delete：-->
+    <!--每个标签中都有 id 属性，在同一个 mapper 文件中 id 不允许重复；-->
+    <!--参数 parameterMap 已经被废弃，现在其存在的目的就是为了兼容前期的项目；-->
+    <!--参数 parameterType 支持很多的类型，例如 int、Integer、String、Double、List、Map 或者实体对象等；-->
+    <!--返回值 resultType 用于简单的类型；-->
+    <!--返回值 resultMap 用于复杂的类型；-->
+    <!--当参数和返回值是集合的时候，其声明的是集合中的元素类型；-->
+    <!--SQL 语句不区分大小写，它默认使用 PrepareStatement，预编译，可以防止 SQL 注入。-->
+    <select id="findAll" resultType="com.leipeng.pojo.Person">  <!-- 书写 SQL 语句 -->
+        SELECT * FROM Person
+    </select>
+    <select id="get" parameterType="java.lang.Integer" resultMap="personRM">
+      SELECT * FROM person WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.leipeng.pojo.Person">
+        INSERT INTO person (id,name,age,photoPath) VALUES (#{id},#{name},#{age},#{photoPath})
+    </insert>
+
+    <update id="updatePerson" parameterType="com.leipeng.pojo.Person">
+      update person set name = #{name},age=#{age},photoPath=#{photoPath} where id = #{id}
+    </update>
+    <delete id="deletePerson" parameterType="java.lang.Integer">
+      delete from person where id = #{id}
+    </delete>
+
+    <select id="queryAll" resultType="com.leipeng.pojo.Person" parameterType="com.leipeng.pojo.Person">
+        select id,name,age,photoPath from person where 1=1
+        <if test="name != null">
+            and name = #{name}
+        </if>
+        <if test="age != null">
+            and age = #{age}
+        </if>
+    </select>
+
+    <update id="updatePerson1" parameterType="com.leipeng.pojo.Person">
+        UPDATE  person
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="age != null">
+                 age = #{age},
+            </if>
+        </set>
+        WHERE  id = #{id}
+    </update>
+
+    <!--array-->
+    <delete id="deletePerson1" parameterType="java.lang.Integer">
+        delete from person WHERE id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--list-->
+    <delete id="deletePerson2" parameterType="java.lang.Integer">
+      delete from person WHERE id in
+      <foreach collection="list" item="id" open="(" close=")" separator=",">
+          #{id}
+      </foreach>
+    </delete>
+</mapper>

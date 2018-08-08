@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leipeng/CustomerMapper">
+    <resultMap id="customerRM" type="com.leipeng.pojo.Customer">
+        <id property="id" column="ID"/>
+        <result property="name" column="NAME"/>
+    </resultMap>
+
+    <!-- 配置关联关系 1:N -->
+    <resultMap id="customerOrdersRM" type="com.leipeng.pojo.Customer" extends="customerRM">
+        <!-- 配置多的（N），property 属性就是实体中的 List 对象属性名称，ofType 属性就是集合元素的类型 -->
+        <collection property="orders" ofType="com.leipeng.pojo.Orders">
+            <id property="id" column="ID"/>
+            <result property="sn" column="SN"/>
+            <result property="remark" column="REMARK"/>
+        </collection>
+    </resultMap>
+    
+    
+    <select id="find" parameterType="map"  resultType="java.util.Map">
+        select c.name,o.sn,o.remark
+        from (select id,name from customer) c
+        left join (select id,sn,remark,customer_id from orders) o
+        on c.id = o.customer_id
+        where c.name = #{customerName}
+    </select>
+</mapper>

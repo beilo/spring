@@ -1,0 +1,4 @@
+发现在新增和修改功能出现了500错误
+500 .BeanInstantiationException: Could not instantiate bean class [com.leipeng.pojo.Person]: No default constructor found; nested exception is java.lang.NoSuchMethodException: com.leipeng.pojo.Person.<init>()
+原因是没有默认的构造函数,用data做pojo时要给参数赋值默认值,就会有默认的构造函数了,参考链接如下
+https://stackoverflow.com/questions/35981697/use-kotlin-for-springmvc-could-not-instantiate-bean-class-dataclass?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa

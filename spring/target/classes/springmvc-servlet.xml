@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 声明 Controller start-->
+    <bean id="homeAction" name="/home.action" class="com.leipeng.controller.TestController"/>
+
+    <!-- 声明 Controller end-->
+
+    <!--声明命令控制器 CommandController -->
+    <bean class="com.leipeng.controller.DemoCommandController"/>
+    <!--声明简单表单控制器 SimpleFormController -->
+    <bean class="com.leipeng.controller.PersonFormController">
+        <property name="formView" value="PersonForm"/> <!--转向 form 视图 -->
+        <property name="successView" value="index"/> <!--转向 成功 视图 -->
+    </bean>
+    <!--声明向导控制器 WizardController-->
+    <bean class="com.leipeng.controller.DemoWizardController">
+        <property name="pages">
+            <list>
+                <value>wizard/PersonInfo</value>
+                <value>wizard/PersonEdu</value>
+                <value>wizard/PersonWork</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 声明 handlerMapping -->
+    <!-- 声明 SimpleUrlHandlerMapping 处理器映射 自定义处理器映射  /springmvc/a.action-->
+    <bean id="simpleUrlHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/a.action">homeAction</prop>
+                <prop key="/b.action">homeAction</prop>
+                <prop key="/hello.action">homeAction</prop>
+            </props>
+        </property>
+        <!--用户自定义顺序，增加 order 属性即可 从0开始，越小优先级越高-->
+        <property name="order" value="0"/>
+    </bean>
+
+    <!-- 声明 ControllerClassNameHandlerMapping 处理器映射  /springmvc/testController.action -->
+    <bean id="controllerClassNameHandlerMapping"
+          class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+        <property name="order" value="1"/>
+    </bean>
+
+    <!-- 声明 BeanNameURI 处理器映射，其为默认的处理器映射  /springmvc/home.action-->
+    <bean id="beanNameUrlHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+        <property name="order" value="2"/>
+    </bean>
+
+
+    <!-- 内部资源视图解析器，前缀 + 逻辑名 + 后缀 -->
+    <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+</beans>

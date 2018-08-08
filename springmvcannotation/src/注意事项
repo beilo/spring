@@ -1,0 +1,24 @@
+添加图片,js,css资源映射时,web.xml中servlet-mapping中的
+url-pattern要改为<url-pattern>/</url-pattern>
+
+添加"文件上传视图解析器"时报错
+"java.lang.NoClassDefFoundError: org/apache/commons/fileupload/FileItemFactory"
+原因是少加了一个库
+```
+<dependency>
+   <groupId>commons-fileupload</groupId>
+   <artifactId>commons-fileupload</artifactId>
+   <version>1.2.1</version> <!-- makesure correct version here -->
+</dependency>
+```
+
+上传文件时,保存的要是location下,展示路径要是mapping下
+具体参考"person/updatePersonList"
+<mvc:resources location="/WEB-INF/static/" mapping="/11/**"/>
+
+Error parsing SQL Mapper Configuration. Cause: java.io.IOException: Could not find resource
+https://www.cnblogs.com/Hdaydayup/p/6922919.html
+
+涉及到xml中取文件路径的,可以右键 Copy Reference,例如:
+<mapper resource="UserMapper.xml"></mapper>
+<mapper resource="CustomerMapper.xml"></mapper>
